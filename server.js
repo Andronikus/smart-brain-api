@@ -12,7 +12,7 @@ const image = require('./controllers/image');
 const db = knex({
 	client: 'pg',
 	connection: {
-		host: '127.0.0.1',
+		host: 'postgresql-vertical-79172',
 		user: 'andronikus',
 		password:'',
 		database: 'smart-brain'
@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(cors());
 
 //routes
+app.post('/', (req,res) => res.json("oh yeah. I am online"));
 app.post('/signin', signin.handleSignIn(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
 app.get('/profile/:id', profile.handleProfileGetByID(db));
