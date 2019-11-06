@@ -34,4 +34,5 @@ app.put('/image', image.handleImage(db));
 app.post('/imageURL', (req, res) => image.handleImageURL(req, res));
 
 // server listen port
-app.listen(3001, () => console.log("I'm running on port 3001"));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`I'm running on port ${PORT}`));
