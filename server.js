@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cors());
 
 //routes
-app.post('/', (req,res) => res.json("oh yeah. I am online"));
+app.get('/', (req,res) => res.json("oh yeah. I am online"));
 app.post('/signin', signin.handleSignIn(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
 app.get('/profile/:id', profile.handleProfileGetByID(db));
