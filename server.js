@@ -2,6 +2,11 @@ const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require('knex');
+const morgan = require('morgan');
+
+if(process.env.NODE_ENV !== 'production'){
+	require('dotenv').config();
+}
 
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
@@ -23,6 +28,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(morgan('combined'));
 
 //routes
 app.get('/', (req,res) => res.json("oh yeah. I am online"));
