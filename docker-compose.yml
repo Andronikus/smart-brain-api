@@ -8,6 +8,8 @@ services:
         build: ./
         working_dir: /usr/src/smart-brain-api
         command: npm run start:dev
+        environment: 
+            DATABASE_URL: postgres://andronikus:secret@smart-brain-database:5432/smart-brain-docker
         links: 
             - "smart-brain-database"
         ports: 
@@ -18,7 +20,7 @@ services:
     # database
     smart-brain-database:
         container_name: postgres-db
-        image: postgres:latest
+        build: ./postgres
         ports:
             - "5432:5432"
         environment: 

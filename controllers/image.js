@@ -14,7 +14,9 @@ const handleImageURL = (req, res) => {
 
 			res.json(response.outputs[0].data);
 		})
-		.catch(console.log);
+		.catch(err => {
+			console.log('catch error', err);
+		});
 }
 
 

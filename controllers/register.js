@@ -24,11 +24,13 @@ const handleRegister = (db, bcrypt) => (req, res) => {
     			  	if(detail.includes('already exists')){
     			  		res.status(500).json('user already exists!');
     			  	}else{
-    			  		res.status(500).json('Something went wrong!');
+						  res.status(500).json('Something went wrong!');
+						  res.status(500).json(err);
     			  	}
     			  })
 	})
 	.catch(function(error) {
+		console.log('error', error);
   		res.status(500).json('Something went wrong!');
 	});
 }
