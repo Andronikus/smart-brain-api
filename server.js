@@ -4,7 +4,7 @@ const cors = require('cors');
 const knex = require('knex');
 const morgan = require('morgan');
 
-if(process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
 
@@ -31,10 +31,11 @@ app.use(cors());
 app.use(morgan('combined'));
 
 //routes
-app.get('/', (req,res) => res.json("oh yeah. I am online"));
+app.get('/', (req, res) => res.json("oh yeah. I am online"));
 app.post('/signin', signin.handleSignIn(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
 app.get('/profile/:id', profile.handleProfileGetByID(db));
+app.post('/profile/:id', profile.handleProfileUpdateByID(db));
 app.put('/image', image.handleImage(db));
 app.post('/imageURL', (req, res) => image.handleImageURL(req, res));
 
