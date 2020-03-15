@@ -9,14 +9,18 @@ services:
         working_dir: /usr/src/smart-brain-api
         command: npm run start:dev
         environment: 
-            DATABASE_URL: postgres://andronikus:secret@smart-brain-database:5432/smart-brain-docker
+            POSTGRES_URI: postgres://andronikus:secret@smart-brain-database:5432/smart-brain-docker
+            REDIS_URI: redis://redis:6379
+        links: 
+            - postgres
+            - redis
         ports: 
             - "3001:3001"
         volumes: 
             - ./:/usr/src/smart-brain-api
     
     # database
-    smart-brain-database:
+    postgres:
         container_name: postgres-db
         build: ./postgres
         ports:
@@ -26,3 +30,10 @@ services:
             POSTGRES_PASSWORD: secret
             POSTGRES_DB: smart-brain-docker
             POSTGRES_HOST: smart-brain-database
+    # redis
+    redis:
+        image: redis
+        ports: 
+            - "6379:6379"
+
+
