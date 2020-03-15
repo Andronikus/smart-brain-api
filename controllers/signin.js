@@ -28,7 +28,10 @@ const checkUser = (db, bcrypt, req) => {
 				Promise.reject('incorrect credentials!')
 			}
 		})
-		.catch(err => Promise.reject('wrong user name or password!'))
+		.catch(err => {
+			console.log(err);
+			Promise.reject(new Error(err))
+		})
 }
 
 const signToken = email => {
@@ -36,18 +39,34 @@ const signToken = email => {
 	return jwt.sign(jwtPayload, 'JWT_SECRET');
 }
 
+const setToken = (key, value) => {
+	return Promise.resolve(redisClient.set(key, value));
+}
+
 const createSessions = user => {
 	const { id, email } = user;
 	const token = signToken(email);
 
-	return { sucess: true, userId: id, token }
+	return setToken(token, id)
+		.then(() => ({ sucess: true, userId: id, token }))
+		.catch(console.log);
+}
+
+const getAuthTokenId = (req, res) => {
+	const { authorization } = req.headers;
+	return redisClient.get(authorization, (err, reply) => {
+		if (err || !reply) {
+			return res.status(400).json('Unauthorized access!');
+		}
+		return res.json({ userId: reply });
+	});
 }
 
 const handleSignInWithAuthentication = (db, bcrypt) => (req, res) => {
 	const { authorization } = req.headers;
 
 	if (authorization) {
-		return res.json('user already sign in');
+		getAuthTokenId(req, res);
 	}
 
 	checkUser(db, bcrypt, req)
