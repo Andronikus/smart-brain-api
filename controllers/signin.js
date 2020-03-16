@@ -1,7 +1,5 @@
 const jwt = require('jsonwebtoken');
-const redis = require('redis');
-
-const redisClient = redis.createClient(process.env.REDIS_URI);
+const redisClient = require('../database/redis');
 
 const checkUser = (db, bcrypt, req) => {
 	// go to database
@@ -48,8 +46,11 @@ const createSessions = user => {
 	const token = signToken(email);
 
 	return setToken(token, id)
-		.then(() => ({ sucess: true, userId: id, token }))
-		.catch(console.log);
+		.then(() => {
+			console.log('token',redisClient.get(token));
+			return { sucess: true, userId: id, token }
+		})
+		.catch(err => console.log(err));
 }
 
 const getAuthTokenId = (req, res) => {
@@ -66,7 +67,7 @@ const handleSignInWithAuthentication = (db, bcrypt) => (req, res) => {
 	const { authorization } = req.headers;
 
 	if (authorization) {
-		getAuthTokenId(req, res);
+		return getAuthTokenId(req, res);
 	}
 
 	checkUser(db, bcrypt, req)

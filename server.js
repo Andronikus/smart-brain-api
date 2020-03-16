@@ -12,6 +12,7 @@ const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
+const auth = require('./middleware/authorization');
 
 // initialize database connection
 const db = knex({
@@ -34,10 +35,10 @@ app.use(morgan('combined'));
 app.get('/', (req, res) => res.json("oh yeah. I am online"));
 app.post('/signin', signin.handleSignInWithAuthentication(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
-app.get('/profile/:id', profile.handleProfileGetByID(db));
-app.post('/profile/:id', profile.handleProfileUpdateByID(db));
-app.put('/image', image.handleImage(db));
-app.post('/imageURL', (req, res) => image.handleImageURL(req, res));
+app.get('/profile/:id', auth.authorize, profile.handleProfileGetByID(db));
+app.post('/profile/:id', auth.authorize, profile.handleProfileUpdateByID(db));
+app.put('/image', auth.authorize, image.handleImage(db));
+app.post('/imageURL', auth.authorize, (req, res) => image.handleImageURL(req, res));
 
 // server listen port
 const PORT = process.env.PORT || 3001;
