@@ -6,13 +6,14 @@ const app = new Clarifai.App({
 
 const handleImageURL = (req, res) => {
 	const { input } = req.body;
+
 	app.models.predict(Clarifai.FACE_DETECT_MODEL, input)
 		.then(response => {
 			if (!response) {
 				return res.status(400).json('Ops! Something went wrong with image detection');
 			}
 
-			res.json(response.outputs[0].data);
+			return res.json(response.outputs[0].data);
 		})
 		.catch(err => {
 			console.log('catch error', err);

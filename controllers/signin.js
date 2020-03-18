@@ -47,7 +47,6 @@ const createSessions = user => {
 
 	return setToken(token, id)
 		.then(() => {
-			console.log('token',redisClient.get(token));
 			return { sucess: true, userId: id, token }
 		})
 		.catch(err => console.log(err));

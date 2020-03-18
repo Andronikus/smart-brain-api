@@ -13,6 +13,8 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 const auth = require('./middleware/authorization');
+const logout = require('./controllers/logout');
+
 
 // initialize database connection
 const db = knex({
@@ -39,6 +41,7 @@ app.get('/profile/:id', auth.authorize, profile.handleProfileGetByID(db));
 app.post('/profile/:id', auth.authorize, profile.handleProfileUpdateByID(db));
 app.put('/image', auth.authorize, image.handleImage(db));
 app.post('/imageURL', auth.authorize, (req, res) => image.handleImageURL(req, res));
+app.post('/logout', (req,res) => logout.handleLogout(req,res));
 
 // server listen port
 const PORT = process.env.PORT || 3001;
