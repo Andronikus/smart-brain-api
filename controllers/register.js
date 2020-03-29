@@ -1,3 +1,5 @@
+const sessions = require('../utils/sessions');
+
 const handleRegister = (db, bcrypt) => (req, res) => {
 	const {name, email, password} = req.body;
 
@@ -15,18 +17,19 @@ const handleRegister = (db, bcrypt) => (req, res) => {
       					return trx.insert({name: name, email: email[0], joined_at: new Date()})
     			  				  .into('users')
     							  .returning('*')
-    							  .then( data => res.json(data[0]))
-    			  })
+								  .then( data => sessions.createSession(data[0]))
+								  .then( session => res.json(session))
+								  .catch(err => res.status(500).json('Something went wrong while register user!'))
+								  })
     			  .then(trx.commit)
     			  .catch( err => {
-    			  	trx.rollback;
-    			  	const {detail} = err;
-    			  	if(detail.includes('already exists')){
-    			  		res.status(500).json('user already exists!');
-    			  	}else{
-						  res.status(500).json('Something went wrong!');
-						  res.status(500).json(err);
-    			  	}
+						trx.rollback;
+						const {detail} = err;
+						if(detail.includes('already exists')){
+							return res.status(500).json('user already exists!');
+						}else{
+							return res.status(500).json('Something went wrong!');
+						}
     			  })
 	})
 	.catch(function(error) {
