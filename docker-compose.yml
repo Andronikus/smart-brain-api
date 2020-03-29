@@ -18,7 +18,26 @@ services:
             - "3001:3001"
         volumes: 
             - ./:/usr/src/smart-brain-api
-    
+     
+    # to use with nginx to simulate a load balance
+    #smart-brain-api02:
+    #    container_name: backend-api2
+    #    # image: node:12.16.1
+    #    build: ./
+    #    working_dir: /usr/src/smart-brain-api
+    #    command: npm run start:dev
+    #    environment: 
+    #        POSTGRES_URI: postgres://andronikus:secret@postgres:5432/smart-brain-docker
+    #        REDIS_URI: redis://redis:6379
+    #        PORT: 3002
+    #    links: 
+    #        - postgres
+    #        - redis
+    #    ports: 
+    #        - "3002:3002"
+    #    volumes: 
+    #        - ./:/usr/src/smart-brain-api
+            
     # database
     postgres:
         container_name: postgres-db
@@ -35,5 +54,11 @@ services:
         image: redis
         ports: 
             - "6379:6379"
-
-
+    #nginx 
+    #load-balancer:
+    #    build: nginx/
+    #    ports: 
+    #        - 80:80
+    #    links: 
+    #        - smart-brain-api
+    #        - smart-brain-api02

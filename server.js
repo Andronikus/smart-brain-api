@@ -35,6 +35,7 @@ app.use(morgan('combined'));
 
 //routes
 app.get('/', (req, res) => res.json("oh yeah. I am online"));
+app.get('/favicon.ico', (req, res) => res.json("oh yeah. favicon.ico"));
 app.post('/signin', signin.handleSignInWithAuthentication(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
 app.get('/profile/:id', auth.authorize, profile.handleProfileGetByID(db));
